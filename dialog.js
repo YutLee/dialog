@@ -23,6 +23,12 @@
 		$cancel,
 		$ok,
 		$overlay;
+		
+	var result;
+	
+	function isBoolean(variable) {
+		return Object.prototype.toString.call(variable) === '[object Boolean]';
+	}
 	
 	/**
 	 * 初始化对话框
@@ -31,12 +37,12 @@
 	function init() {
 		if(!$wrapper) {
 			$wrapper = $(html).appendTo('body');
-			$dialog = $wrapper.children('.modal-dialog'),
+			$dialog = $wrapper.prev('.modal-dialog');
 			$title = $dialog.children('.dialog-title');
 			$content = $dialog.children('.dialog-content');
 			$cancel = $dialog.children('.dialog-button').children().first();
 			$ok = $dialog.children('.dialog-button').children().last();
-			$overlay = $wrapper.children('.modal-dialog-overlay');
+			$overlay = $dialog.next('.modal-dialog-overlay');
 		}
 		$cancel.show();
 	}
@@ -52,7 +58,8 @@
 			dH = $dialog.outerHeight(),
 			left = (w - dW) * .5,
 			top = (h - dH) * .5;
-		$dialog.css({'top': top, 'left': left, 'display': 'block'});
+		$dialog.css({'top': top, 'left': left});
+		$wrapper.show();
 	}
 	
 	/**
@@ -66,6 +73,55 @@
 			$content.empty().text(msg);
 		}
 		position();
+	}
+	
+	/**
+	 * 隐藏对话框
+	 * @private
+	 */
+	function hideDialog() {
+		$wrapper.hide();
+		$content.empty();
+	}
+	
+	/**
+	 * 事件处理函数
+	 * @private
+	 */
+	function cancelHandle() {
+		hideDialog();
+	}
+	
+	/**
+	 * 取消绑定的事件
+	 * @private
+	 */
+	function unbindEvent() {
+		$ok.unbind('click');
+		$cancel.unbind('click');
+	}
+	
+	/**
+	 * 绑定的事件
+	 * @private
+	 */
+	function bindEvent(type) {
+		$ok.bind({
+			'click': function() {
+				if(type === 1) {
+					result = true;
+				}else if(type === 2) {
+					
+				}
+				hideDialog();
+			}
+		});
+		$cancel.bind({
+			'click': function() {
+				result = false;
+				hideDialog();
+			}
+		});
 	}
 
 	
@@ -89,12 +145,8 @@
 			init();
 			$cancel.hide();
 			addContent(msg);
-			$ok.bind({
-				'click.alert': function() {
-					$dialog.hide();
-					$content.empty();
-				}
-			});
+			unbindEvent();
+			bindEvent(0);
 		},
 		/**
 		 * confirm 对话框
@@ -102,9 +154,20 @@
 		 * @return {boolean} 确定时返回 true，取消时返回 false
 		 */
 		confirm: function(msg) {
+			var that = this;
 			init();
 			addContent(msg);
-			return false;
+			unbindEvent();
+			$ok.bind({
+			'click': function() {
+					hideDialog();
+				}
+			});
+			$cancel.bind({
+				'click': function() {
+					hideDialog();
+				}
+			});
 		},
 		/**
 		 * prompt 对话框
@@ -114,7 +177,8 @@
 		 */
 		prompt: function(msg, value) {
 			init();
-			return value;
+			unbindEvent();
+			bindEvent(2);
 		}
 	};
 		

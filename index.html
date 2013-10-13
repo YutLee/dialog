@@ -9,7 +9,18 @@
 </head>
 <body>
 	<button onclick="app.dialog.alert(0);">alert</button>
-	<button onclick="app.dialog.confirm('确定取消？');">confirm</button>
+	<button onclick="" class="confirm">confirm</button>
 	<button onclick="app.dialog.prompt('请输入验证码');">prompt</button>
+	<script>
+		$('.confirm').bind({
+			'click': function() {
+				if(app.dialog.confirm('确定取消？')){
+					console.log(1);
+				}else {
+					console.log(0);
+				}
+			}
+		});
+	</script>
 </body>
 </html>
