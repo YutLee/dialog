@@ -15,9 +15,9 @@
 		 */
 		app = window.app = window.app || {};
 		
-	var html = $('<div class="modal-dialog"><div class="dialog-close">×</div><div class="dialog-title">模态对话框</div><div class="dialog-content"></div> <div class="dialog-button"><button class="play-button" tabIndex="10002">取消</button> <button class="play-button" tabIndex="10001">确定</button></div></div><div class="modal-dialog-overlay"></div>');
-	var $prompt;
-	var $wrapper,
+	var html;
+	var $prompt,
+		$wrapper,
 		$dialog,
 		$title,
 		$content,
@@ -25,8 +25,7 @@
 		$ok,
 		$close,
 		$overlay;
-		
-	var result;
+	var isShow = false;
 	
 	function isFunction(variable) {
 		return Object.prototype.toString.call(variable) === '[object Function]';
@@ -47,6 +46,7 @@
 			$close = $dialog.children('.dialog-close');
 			$overlay = $dialog.next('.modal-dialog-overlay');
 		}
+		$wrapper.hide();
 		$cancel.show();
 	}
 	
@@ -77,6 +77,7 @@
 			$content.empty().text(msg);
 		}
 		position();
+		isShow = true;
 	}
 	
 	/**
@@ -87,6 +88,7 @@
 		$wrapper.hide();
 		$content.empty();
 		unbind();
+		isShow = false;
 	}
 	
 	/**
@@ -102,8 +104,6 @@
 		$(document).unbind('keydown.dialogTab');
 		$ok.unbind('keydown.dialogEnter');
 		$cancel.unbind('keydown.dialogEnter');
-		//$cancel.unbind('keydown');
-		//$overlay.unbind('keydown');
 	}
 	
 	/**
@@ -136,7 +136,6 @@
 				}
 			});
 		} else{
-			$(document).keydown();
 			$ok.focus();
 		}
 		$(document).bind({
@@ -148,7 +147,7 @@
 			'keydown.dialogTab': function(e) {
 				if(e.keyCode === 9) {
 					if(!$cancel) {
-						$ok.focus();
+						//$ok.focus();
 					}
 				}
 			}
@@ -190,16 +189,32 @@
 	app.dialog = {
 		/**
 		 * setup 全局设置
-		 * @param {string} title 需要显示的文本信息
+		 * @param {string} dialogClass 弹窗口类名
+		 * @param {string} overlayClass 遮罩层类名
+		 * @param {string} title 提示的标题
+		 * @param {string} ok ok按钮的文本
+		 * @param {string} cancel cancel按钮的文本
 		 */
-		setup: function(option) {
+		setup: function(options) {
+			var o = $.extend({
+				dialogClass: '',
+				overlayClass: '',
+				title: '温馨提示',
+				ok: '确定',
+				cancel: '取消'
+			}, options || {});
 			
+			html = $('<div class="modal-dialog ' + o.dialogClass +'"><div class="dialog-close">×</div><div class="dialog-title">' + o.title + '</div><div class="dialog-content"></div> <div class="dialog-button"><button class="play-button" tabIndex="10002">' + o.cancel + '</button> <button class="play-button" tabIndex="10001">' + o.ok + '</button></div></div><div class="modal-dialog-overlay ' + o.overlayClass +'"></div>');
+
 		},
 		/**
 		 * alert 对话框
 		 * @param {string} msg 需要显示的文本信息
 		 */
 		alert: function(msg) {
+			if(isShow) {
+				return false;
+			}
 			init();
 			$cancel.hide();
 			addContent(msg);
@@ -220,6 +235,9 @@
 		 * @return {boolean} 确定时返回 true，取消时返回 false
 		 */
 		confirm: function(msg, ok, cancel) {
+			if(isShow) {
+				return false;
+			}
 			init();
 			addContent(msg);
 			ok = noop(ok);
@@ -244,6 +262,9 @@
 		 * @return {boolean} 确定时返回 value，取消时返回 false
 		 */
 		prompt: function(msg, value, ok, cancel) {
+			if(isShow) {
+				return false;
+			}
 			var okFn, cancelFn;
 			init();
 			if(isFunction(value)) {
@@ -268,5 +289,7 @@
 			bindKeybord($ok, $close, $cancel, $prompt);
 		}
 	};
-		
+	
+	app.dialog.setup();
+	
 })(jQuery, window);

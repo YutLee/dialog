@@ -12,6 +12,13 @@
 	<button onclick="" class="confirm">confirm</button>
 	<button class="prompt">prompt</button>
 	<script>
+		app.dialog.setup({
+				dialogClass: 'dc',
+				overlayClass: 'oc',
+				title: '自定义提示',
+				ok: 'ok',
+				cancel: 'cancel'
+			});
 		$('.confirm').bind({
 			'click': function() {
 				app.dialog.confirm('确定取消？', function() {
