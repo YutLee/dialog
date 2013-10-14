@@ -10,15 +10,25 @@
 <body>
 	<button onclick="app.dialog.alert(0);">alert</button>
 	<button onclick="" class="confirm">confirm</button>
-	<button onclick="app.dialog.prompt('请输入验证码');">prompt</button>
+	<button class="prompt">prompt</button>
 	<script>
 		$('.confirm').bind({
 			'click': function() {
-				if(app.dialog.confirm('确定取消？')){
+				app.dialog.confirm('确定取消？', function() {
 					console.log(1);
-				}else {
+				}, function() {
 					console.log(0);
-				}
+				});
+			}
+		});
+		
+		$('.prompt').bind({
+			'click': function() {
+				app.dialog.prompt('请输入验证码', '55', function(val) {
+					console.log(val);
+				}, function() {
+					console.log(0);
+				});
 			}
 		});
 	</script>
