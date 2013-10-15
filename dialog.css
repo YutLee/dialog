@@ -24,6 +24,13 @@
 	position: absolute;
 	z-index: 20001;
 }
+.dialog-input{
+	width: 378px;
+	min-height: 30px;
+	padding:1px 10px;
+	font-size: 13px;
+	border: 1px solid #cacaca;
+}
 .dialog-title{
 	font-size: 26px;
 	padding: 20px;

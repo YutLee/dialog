@@ -21,6 +21,7 @@
 		$dialog,
 		$title,
 		$content,
+		$button,
 		$cancel,
 		$ok,
 		$close,
@@ -41,8 +42,9 @@
 			$dialog = $wrapper.prev('.modal-dialog');
 			$title = $dialog.children('.dialog-title');
 			$content = $dialog.children('.dialog-content');
-			$cancel = $dialog.children('.dialog-button').children().first();
-			$ok = $dialog.children('.dialog-button').children().last();
+			$button = $dialog.children('.dialog-button');
+			$cancel = $button.children().first();
+			$ok = $button.children().last();
 			$close = $dialog.children('.dialog-close');
 			$overlay = $dialog.next('.modal-dialog-overlay');
 		}
@@ -136,7 +138,9 @@
 				}
 			});
 		} else{
-			$ok.focus();
+			setTimeout(function() {
+				$ok.focus();
+			}, 20);	//firefox下要大于12毫秒，其它大于2毫秒即可，用20毫秒确保能获取焦点
 		}
 		$(document).bind({
 			'keydown.dialogEsc': function(e) {
@@ -147,7 +151,21 @@
 			'keydown.dialogTab': function(e) {
 				if(e.keyCode === 9) {
 					if(!$cancel) {
-						//$ok.focus();
+						setTimeout(function() {
+							$ok.focus();
+						}, 0);
+					}else if(!$prompt) {
+						setTimeout(function() {
+							$cancel.blur(function() {
+								$ok.focus();
+							});
+						}, 0);
+					}else {
+						setTimeout(function() {
+							$cancel.blur(function() {
+								$prompt.focus();
+							});
+						}, 0);
 					}
 				}
 			}
