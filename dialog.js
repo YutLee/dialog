@@ -28,10 +28,6 @@
 		$overlay;
 	var isShow = false;
 	
-	function isFunction(variable) {
-		return Object.prototype.toString.call(variable) === '[object Function]';
-	}
-	
 	/**
 	 * 初始化对话框
 	 * @private
@@ -61,10 +57,18 @@
 			h = $(window).height(),
 			dW = $dialog.outerWidth(),
 			dH = $dialog.outerHeight(),
-			left = (w - dW) * .5,
-			top = (h - dH) * .5;
+			winTop = $(window).scrollTop(),
+			winLeft = $(window).scrollLeft(),
+			left = (w - dW) * .5 + winLeft,
+			top = (h - dH) * .5 + winTop;
 		$dialog.css({'top': top, 'left': left});
 		$wrapper.show();
+		$(window).bind({
+			'scroll.dialog': function() {
+				$(window).scrollTop(winTop);
+				$(window).scrollLeft(winLeft);
+			}
+		});
 	}
 	
 	/**
@@ -90,6 +94,7 @@
 		$wrapper.hide();
 		$content.empty();
 		unbind();
+		$(window).unbind('scroll.dialog');
 		isShow = false;
 	}
 	
@@ -112,12 +117,12 @@
 	 * 绑定 取消/关闭 按钮
 	 * @private
 	 */
-	function bindConcel(el, cencel) {
+	function bindCancel(el, cancel) {
 		el.bind({
 			'click': function() {
 				hideDialog();
-				if(isFunction(cencel)) {
-					cencel.call(this);
+				if($.isFunction(cancel)) {
+					cancel.call(this);
 				}
 			}
 		});
@@ -129,7 +134,7 @@
 	 */
 	function bindKeybord($ok, $close, $cancel, $prompt) {
 		if($prompt) {
-			$prompt.focus();
+			$prompt.focus().select();
 			$prompt.bind({
 				'keydown': function(e) {
 					if(e.keyCode === 13) {
@@ -153,19 +158,19 @@
 					if(!$cancel) {
 						setTimeout(function() {
 							$ok.focus();
-						}, 0);
+						}, 1);
 					}else if(!$prompt) {
 						setTimeout(function() {
 							$cancel.blur(function() {
 								$ok.focus();
 							});
-						}, 0);
+						}, 1);
 					}else {
 						setTimeout(function() {
 							$cancel.blur(function() {
 								$prompt.focus();
 							});
-						}, 0);
+						}, 1);
 					}
 				}
 			}
@@ -194,7 +199,7 @@
 	 * @private
 	 */
 	function noop(fn) {
-		if(!fn || !isFunction(fn)){
+		if(!fn || !$.isFunction(fn)){
 			fn = $.noop;
 		}
 		return fn;
@@ -241,8 +246,8 @@
 					hideDialog();
 				}
 			});
-			bindConcel($close);
-			bindConcel($overlay);
+			bindCancel($close);
+			bindCancel($overlay);
 			bindKeybord($ok, $close);
 		},
 		/**
@@ -266,9 +271,9 @@
 					ok.call(this);
 				}
 			});
-			bindConcel($cancel, cancel);
-			bindConcel($close, cancel);
-			bindConcel($overlay, cancel);
+			bindCancel($cancel, cancel);
+			bindCancel($close, cancel);
+			bindCancel($overlay, cancel);
 			bindKeybord($ok, $close, $cancel);
 		},
 		/**
@@ -285,7 +290,7 @@
 			}
 			var okFn, cancelFn;
 			init();
-			if(isFunction(value)) {
+			if($.isFunction(value)) {
 				addContent(msg, '');
 				okFn = noop(value);
 				cancelFn = noop(ok);	
@@ -301,9 +306,9 @@
 					okFn.call(this, val);
 				}
 			});
-			bindConcel($cancel, cancelFn);
-			bindConcel($close, cancelFn);
-			bindConcel($overlay, cancelFn);
+			bindCancel($cancel, cancelFn);
+			bindCancel($close, cancelFn);
+			bindCancel($overlay, cancelFn);
 			bindKeybord($ok, $close, $cancel, $prompt);
 		}
 	};
