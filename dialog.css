@@ -12,7 +12,13 @@
 }
 .modal-dialog{
 	min-height: 240px;
-	min-width: 440px;
+	width: 440px;
+	border-style:solid;
+	border-width:1px;
+	border-top-color:#b2b2b2;
+	border-bottom-color:#a4a4a4;
+	border-left-color:#bababa;
+	border-right-color:#bababa;
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
 	border-radius: 5px;
@@ -27,13 +33,14 @@
 .dialog-input{
 	width: 378px;
 	min-height: 30px;
+	line-height:30px;
 	padding:1px 10px;
 	font-size: 13px;
-	border: 1px solid #ddd;
+	border: 1px solid #d9d9d9;
 }
 .dialog-input:focus{
 	outline:none;
-	border: 1px solid #aaa;
+	border: 1px solid #4d90fe;
 }
 .dialog-title{
 	font-size: 26px;
@@ -42,9 +49,11 @@
 .dialog-content{
 	font-size: 18px;
 	padding: 0 20px;
+	line-height: 1.5;
 }
 .dialog-close{
 	text-align:center;
+	font-family: “微软雅黑”, Tahoma, sans-serif;
 	font-size:12px;
 	font-weight:bold;
 	color:#727272;
@@ -53,7 +62,7 @@
 	top:10px;
 	width:18px;
 	height:18px;
-	line-height:20px;
+	line-height:18px;
 	overflow:hidden;
 	cursor:pointer;
 	text-shadow:0 0 1px #000;
@@ -99,8 +108,13 @@
 	-webkit-user-select: none;
 	-ms-user-select: none;
 	background-color: #fff;
-	border: 1px solid #ddd;
-	color: #737373;
+	border-style:solid;
+	border-width:1px;
+	border-top-color:#bababa;
+	border-bottom-color:#a5a5a5;
+	border-left-color:#b3b3b3;
+	border-right-color:#b3b3b3;
+	color: #333;
 	cursor: pointer;
 	display: inline-block;
 	font-family: "Roboto",sans-serif;
@@ -123,11 +137,17 @@
 	-webkit-box-shadow: 0 1px 0 0 rgba(0,0,0,0.27);
 	box-shadow: 0 1px 0 0 rgba(0,0,0,0.27);
 	border: 1px solid rgba(0,0,0,0.27);
-	color: #333;
+	color: #000;
 	cursor: pointer;
 }
 .play-button:focus{
-	border: 1px solid rgba(0,0,0,0.4);
+	border-style:solid;
+	border-width:1px;
+	border-top-color:#3e7ef8;
+	border-bottom-color:#3770dc;
+	border-left-color:#3b79ed;
+	border-right-color:#3b79ed;
+	color:#000;
 }
 .play-button:active,
 .play-button.open{

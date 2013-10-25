@@ -80,6 +80,8 @@
 			$content.empty().append('<div>' + msg + '</div>');
 			$prompt = $('<input class="dialog-input" type="text" name="prompt" tabIndex="10000" value="' + value +'" />').appendTo($content);
 		}else {
+			console.log(msg);
+			msg = msg === undefined ? 'undefined' : msg;
 			$content.empty().text(msg);
 		}
 		position();
@@ -106,7 +108,7 @@
 		$ok.unbind('click');
 		$cancel.unbind('click');
 		$close.unbind('click');
-		$overlay.unbind('click');
+		//$overlay.unbind('click');
 		$(document).unbind('keydown.dialogEsc');
 		$(document).unbind('keydown.dialogTab');
 		$ok.unbind('keydown.dialogEnter');
@@ -217,6 +219,8 @@
 		 * @param {string} title 提示的标题
 		 * @param {string} ok ok按钮的文本
 		 * @param {string} cancel cancel按钮的文本
+		 * @example 
+		 * app.dialog.setup({title: '=^_^=', ok: 'Yes', cancel: 'No'});
 		 */
 		setup: function(options) {
 			var o = $.extend({
@@ -232,7 +236,9 @@
 		},
 		/**
 		 * alert 对话框
-		 * @param {string} msg 需要显示的文本信息
+		 * @param {string|number} msg 需要显示的文本信息
+		 * @example
+		 * app.dialog.alert('o_o|');
 		 */
 		alert: function(msg) {
 			if(isShow) {
@@ -247,7 +253,7 @@
 				}
 			});
 			bindCancel($close);
-			bindCancel($overlay);
+			//bindCancel($overlay);
 			bindKeybord($ok, $close);
 		},
 		/**
@@ -273,7 +279,7 @@
 			});
 			bindCancel($cancel, cancel);
 			bindCancel($close, cancel);
-			bindCancel($overlay, cancel);
+			//bindCancel($overlay, cancel);
 			bindKeybord($ok, $close, $cancel);
 		},
 		/**
@@ -308,7 +314,7 @@
 			});
 			bindCancel($cancel, cancelFn);
 			bindCancel($close, cancelFn);
-			bindCancel($overlay, cancelFn);
+			//bindCancel($overlay, cancelFn);
 			bindKeybord($ok, $close, $cancel, $prompt);
 		}
 	};
