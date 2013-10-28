@@ -67,6 +67,11 @@
 			'scroll.dialog': function() {
 				$(window).scrollTop(winTop);
 				$(window).scrollLeft(winLeft);
+			},
+			'keydown.dialog': function(e) {
+				if(e.keyCode !== 9 || e.keyCode !== 13 || e.keyCode !== 27) {
+					return false;
+				}
 			}
 		});
 	}
@@ -97,6 +102,7 @@
 		$content.empty();
 		unbind();
 		$(window).unbind('scroll.dialog');
+		$(window).unbind('keydown.dialog');
 		isShow = false;
 	}
 	
